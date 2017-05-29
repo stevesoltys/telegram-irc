@@ -1,0 +1,23 @@
+{
+  "irc": {
+    "address": "127.0.0.1",
+    "port": 6667,
+    "password": "irc_server_password",
+
+    "operator_nick": "TelegramIRC"
+  },
+
+  "telegram": {
+    "bots": [
+      {
+        "nick": "stevesoltys",
+        "username": "stevesoltys_bot",
+        "token": "123456789:AAGPk_OTCzuI-_MOD2NvcXKAo1KA1MeMzKc"
+      }
+    ],
+
+    "channels": {
+      "-1001071879676": "irc_channel_name"
+    }
+  }
+}

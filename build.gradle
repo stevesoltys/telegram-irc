@@ -1,0 +1,35 @@
+group 'com.stevesoltys'
+version '0.1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'spring-boot'
+
+repositories {
+    mavenCentral()
+
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile group: 'com.google.code.gson', name: 'gson'
+    compile group: 'org.pircbotx', name: 'pircbotx', version: '2.1'
+
+    compile('com.github.rubenlagus:TelegramBots:v2.3.5') {
+        exclude module: 'jersey-grizzly2-servlet'
+    }
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
+}

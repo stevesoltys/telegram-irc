@@ -1,0 +1,14 @@
+[Unit]
+Description=Telegram IRC
+After=network.target
+
+[Service]
+Type=simple
+User=telegramirc
+Group=telegramirc
+WorkingDirectory=/opt/telegram-irc
+ExecStart=/usr/bin/java -jar telegram-irc.jar
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
