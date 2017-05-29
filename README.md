@@ -13,7 +13,7 @@ A Telegram <=> IRC gateway which aims for seamless integration.
 
 ## Quick Start
 1. Set up an IRC server and configure it to allow an unlimited amount of connections from the telegram-irc host address.
-2. Download the latest release from the [release page](https://github.com/stevesoltys/telegramirc/releases).
+2. Download the latest release from the [release page](https://github.com/stevesoltys/telegram-irc/releases).
 3. Unzip the release and run `./gradlew build`
 4. Copy the built application JAR to the installation path of your choosing: 
 `cp build/libs/telegram-irc-0.1.0.jar /opt/telegram-irc/telegram-irc.jar`
