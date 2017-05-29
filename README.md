@@ -1,15 +1,15 @@
 # telegram-irc
-A Telegram <=> IRC gateway which aims for seamless integration between the two messaging services.
+A Telegram <=> IRC gateway which aims for seamless integration.
 
 ## Features
-* Mapping Telegram groups to IRC channels.
-* Mapping Telegram users to IRC bots, which includes private messaging.
+* Mapping of Telegram groups to IRC channels.
+* Mapping of Telegram users to IRC bots, which includes private messaging.
 * Multi-user support. This means multiple IRC users can be mapped and relayed to their own Telegram bots.
 * Quoted messages when a user replies to another user's message.
 * Media files (images, stickers, etc) are not yet supported, but are a priority on the road map.
 
 ## Requirements
-1. JDK 1.8
+* JDK 1.8
 
 ## Quick Start
 1. Set up an IRC server and configure it to allow an unlimited amount of connections from the telegram-irc host address.
@@ -23,7 +23,7 @@ A Telegram <=> IRC gateway which aims for seamless integration between the two m
 [configuration guide](https://github.com/stevesoltys/telegram-irc/wiki/Configuration).
 7. Start the application: `java -jar /opt/telegram-irc/telegram-irc.jar`
 
-##### Some notes:
+### Some notes:
 * Mapped Telegram group channels will be created automatically by the operator bot when a message is received.
 * When a user sends a message in a Telegram group, their IRC bot is created and will connect to the server, joining 
 the channel and sending the message automatically.
