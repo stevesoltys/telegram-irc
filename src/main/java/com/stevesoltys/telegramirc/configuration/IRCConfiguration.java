@@ -1,9 +1,6 @@
-package com.stevesoltys.telegramirc.irc.configuration;
+package com.stevesoltys.telegramirc.configuration;
 
-import com.stevesoltys.telegramirc.configuration.ConfigurationEntry;
-import com.stevesoltys.telegramirc.configuration.ConfigurationEntryRepository;
-import com.stevesoltys.telegramirc.configuration.ConfigurationException;
-import com.stevesoltys.telegramirc.irc.OperatorBot;
+import com.stevesoltys.telegramirc.protocol.irc.OperatorBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
