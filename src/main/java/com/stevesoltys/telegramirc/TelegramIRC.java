@@ -1,7 +1,7 @@
 package com.stevesoltys.telegramirc;
 
 import com.stevesoltys.telegramirc.configuration.ConfigurationLoader;
-import com.stevesoltys.telegramirc.irc.IRCProtocol;
+import com.stevesoltys.telegramirc.protocol.irc.IRCProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,6 @@ public class TelegramIRC implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         if (args.length == 1) {
             configurationLoader.initialize(args[0]);
 
