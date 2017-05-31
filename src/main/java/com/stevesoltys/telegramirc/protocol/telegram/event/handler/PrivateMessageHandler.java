@@ -1,6 +1,7 @@
 package com.stevesoltys.telegramirc.protocol.telegram.event.handler;
 
 import com.stevesoltys.telegramirc.protocol.telegram.TelegramMessageDecoder;
+import com.stevesoltys.telegramirc.protocol.telegram.TelegramMessageRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramPrivateMessageEvent;
@@ -25,12 +26,17 @@ public class PrivateMessageHandler {
 
     private final TelegramBotRepository telegramBotRepository;
 
+    private final TelegramMessageRepository messageRepository;
+
     @Autowired
     public PrivateMessageHandler(TelegramUserRepository userRepository, TelegramMessageDecoder telegramMessageDecoder,
-                                 TelegramBotRepository telegramBotRepository) {
+                                 TelegramBotRepository telegramBotRepository,
+                                 TelegramMessageRepository messageRepository) {
+
         this.userRepository = userRepository;
         this.telegramMessageDecoder = telegramMessageDecoder;
         this.telegramBotRepository = telegramBotRepository;
+        this.messageRepository = messageRepository;
     }
 
     @EventListener
@@ -38,10 +44,11 @@ public class PrivateMessageHandler {
         TelegramBot telegramBot = event.getTelegramBot();
         Message telegramMessage = event.getMessage();
 
-        if (telegramMessage.getFrom() == null) {
+        if (telegramMessage.getFrom() == null || messageRepository.hasProcessed(telegramMessage)) {
             return;
         }
 
+        messageRepository.add(telegramMessage);
         Optional<String> ircIdentifierOptional = telegramBotRepository.findIrcIdentifier(telegramBot);
 
         ircIdentifierOptional.ifPresent(recipientIrcIdentifier -> {
