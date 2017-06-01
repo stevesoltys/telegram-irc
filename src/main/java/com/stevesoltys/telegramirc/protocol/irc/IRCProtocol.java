@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -67,6 +68,10 @@ public class IRCProtocol {
                 .setAutoReconnect(true)
                 .addServer(serverConfiguration.getServerAddress(), serverConfiguration.getServerPort())
                 .setServerPassword(serverConfiguration.getServerPassword());
+
+        if (serverConfiguration.getSslFlag()) {
+            configurationBuilder.setSocketFactory(SSLSocketFactory.getDefault());
+        }
 
         PircBotX bot = new PircBotX(configurationBuilder.buildConfiguration());
 

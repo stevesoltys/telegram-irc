@@ -1,8 +1,9 @@
 {
   "irc": {
-    "address": "127.0.0.1",
-    "port": 6667,
+    "address": "irc.stevesoltys.com",
+    "port": 6697,
     "password": "irc_server_password",
+    "ssl": true,
 
     "operator_nick": "TelegramIRC"
   },
