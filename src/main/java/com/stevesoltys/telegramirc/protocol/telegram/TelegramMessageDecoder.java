@@ -5,6 +5,7 @@ import org.telegram.telegrambots.api.objects.Document;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Sticker;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,10 +48,14 @@ public class TelegramMessageDecoder {
         }
 
         if (telegramMessage.hasText()) {
-            messages.add(telegramMessage.getText());
+            messages.addAll(decodeMultiLineMessages(telegramMessage.getText()));
         }
 
         return messages;
+    }
+
+    private List<String> decodeMultiLineMessages(String text) {
+        return Arrays.asList(text.split("\r\n?|\n"));
     }
 
 }
