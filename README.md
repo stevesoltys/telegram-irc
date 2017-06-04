@@ -1,5 +1,5 @@
 # telegram-irc
-A [Telegram](https://telegram.org/) <-> IRC gateway.
+A bridge between [Telegram](https://telegram.org/) and [IRC](https://en.wikipedia.org/wiki/Internet_Relay_Chat).
 
 ## Features
 * Mapping of Telegram groups to IRC channels.
@@ -16,12 +16,12 @@ A [Telegram](https://telegram.org/) <-> IRC gateway.
 1. Download the latest release from the [release page](https://github.com/stevesoltys/telegram-irc/releases).
 2. Unzip the release and run `./gradlew build`
 3. Copy the built application JAR to the installation path of your choosing: 
-`cp build/libs/telegram-irc-0.1.0.jar /opt/telegram-irc/telegram-irc.jar`
-4. Copy the example JSON configuration file to your home directory: 
-`cp deploy/config.example.json ~/.config/telegram-irc/config.json`
-5. Create your Telegram bot and edit the default config `$EDITOR ~/.config/telegram-irc/config.json` using the
-[configuration guide](https://github.com/stevesoltys/telegram-irc/wiki/Configuration).
-6. Start the application: `java -jar /opt/telegram-irc/telegram-irc.jar`
+`cp build/libs/telegram-irc-0.1.0.jar ./telegram-irc.jar`
+4. Copy the example JSON configuration file to a new file: 
+`cp deploy/config.example.json ./config.json`
+5. Create your Telegram bot and edit the default configuration using the
+[configuration guide](https://github.com/stevesoltys/telegram-irc/wiki/Configuration): `$EDITOR config.json`.
+6. Start the application: `java -jar telegram-irc.jar config.json`
 
 For a more detailed installation guide, see [this page](https://github.com/stevesoltys/telegram-irc/wiki/Installation).
 
