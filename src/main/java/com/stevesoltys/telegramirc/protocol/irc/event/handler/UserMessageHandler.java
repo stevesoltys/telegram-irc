@@ -1,11 +1,13 @@
 package com.stevesoltys.telegramirc.protocol.irc.event.handler;
 
+import com.stevesoltys.telegramirc.protocol.irc.IRCMessageEncoder;
+import com.stevesoltys.telegramirc.protocol.irc.event.ActionMessageEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserMessageEvent;
-import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
+import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
+import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,33 @@ public class UserMessageHandler {
 
     private final TelegramUserRepository userRepository;
 
+    private final IRCMessageEncoder messageEncoder;
+
     @Autowired
-    public UserMessageHandler(TelegramBotRepository telegramBotRepository, TelegramUserRepository userRepository) {
+    public UserMessageHandler(TelegramBotRepository telegramBotRepository, TelegramUserRepository userRepository,
+                              IRCMessageEncoder messageEncoder) {
+
         this.telegramBotRepository = telegramBotRepository;
         this.userRepository = userRepository;
+        this.messageEncoder = messageEncoder;
     }
 
     @EventListener
-    public void handle(UserMessageEvent userMessageEvent) {
-        PrivateMessageEvent event = userMessageEvent.getEvent();
+    public void handlePrivateUserMessage(UserMessageEvent userMessageEvent) {
+        handlePrivateMessage(userMessageEvent.getEvent(), false);
+    }
+
+    @EventListener
+    public void handlePrivateActionMessage(ActionMessageEvent actionMessageEvent) {
+
+        if (actionMessageEvent.getEvent().getChannel() != null) {
+            return;
+        }
+
+        handlePrivateMessage(actionMessageEvent.getEvent(), true);
+    }
+
+    private void handlePrivateMessage(GenericMessageEvent event, boolean action) {
 
         if (event.getUser() == null) {
             return;
@@ -53,14 +73,15 @@ public class UserMessageHandler {
         }
 
         TelegramUser telegramUser = telegramUserOptional.get();
-        TelegramBot telegramBot = telegramBotOptional.get();
+        String telegramId = telegramUser.getTelegramIdentifier();
+        String message = event.getMessage();
 
-        SendMessage message = new SendMessage()
-                .setText(event.getMessage())
-                .setChatId(telegramUser.getTelegramIdentifier());
+        SendMessage telegramMessage = action ? messageEncoder.encodeActionMessage(telegramId, message) :
+                messageEncoder.encodeMessage(telegramId, message);
 
         try {
-            telegramBot.sendMessage(message);
+            TelegramBot telegramBot = telegramBotOptional.get();
+            telegramBot.sendMessage(telegramMessage);
 
         } catch (TelegramApiException e) {
             logger.error("Error while sending Telegram message: {}", e.toString());

@@ -1,8 +1,10 @@
 package com.stevesoltys.telegramirc.protocol.irc;
 
+import com.stevesoltys.telegramirc.protocol.irc.event.ActionMessageEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.ChannelMessageEvent;
 import com.stevesoltys.telegramirc.protocol.telegram.TelegramProtocol;
 import org.pircbotx.hooks.ListenerAdapter;
+import org.pircbotx.hooks.events.ActionEvent;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +37,12 @@ public class OperatorBot extends ListenerAdapter {
     @Override
     public void onMessage(MessageEvent event) throws Exception {
         eventPublisher.publishEvent(new ChannelMessageEvent(event));
+    }
+
+    @Override
+    public void onAction(ActionEvent event) throws Exception {
+        if (event.getChannel() != null) {
+            eventPublisher.publishEvent(new ActionMessageEvent(event));
+        }
     }
 }

@@ -1,13 +1,11 @@
 package com.stevesoltys.telegramirc.protocol.irc;
 
+import com.stevesoltys.telegramirc.protocol.irc.event.ActionMessageEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserConnectEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserJoinEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserMessageEvent;
 import org.pircbotx.hooks.ListenerAdapter;
-import org.pircbotx.hooks.events.ConnectAttemptFailedEvent;
-import org.pircbotx.hooks.events.ConnectEvent;
-import org.pircbotx.hooks.events.JoinEvent;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
+import org.pircbotx.hooks.events.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -44,4 +42,10 @@ public class UserBot extends ListenerAdapter {
         eventPublisher.publishEvent(new UserMessageEvent(event));
     }
 
+    @Override
+    public void onAction(ActionEvent event) throws Exception {
+        if(event.getChannel() == null) {
+            eventPublisher.publishEvent(new ActionMessageEvent(event));
+        }
+    }
 }
