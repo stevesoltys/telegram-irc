@@ -24,6 +24,8 @@ public class IRCConfiguration extends ConfigurationEntry {
 
     private static final String OPERATOR_NICK_KEY = "operator_nick";
 
+    private static final String OPERATOR_PASSWORD_KEY = "operator_password";
+
     private String serverAddress;
 
     private int serverPort;
@@ -33,6 +35,8 @@ public class IRCConfiguration extends ConfigurationEntry {
     private boolean ssl;
 
     private String operatorNick;
+
+    private String operatorPassword;
 
     @Autowired
     public IRCConfiguration(ConfigurationEntryRepository configurationEntryRepository) {
@@ -58,6 +62,7 @@ public class IRCConfiguration extends ConfigurationEntry {
         ssl = (boolean) serverConfiguration.getOrDefault(SSL_FLAG_KEY, false);
 
         operatorNick = (String) serverConfiguration.getOrDefault(OPERATOR_NICK_KEY, OperatorBot.DEFAULT_NICK);
+        operatorPassword = (String) serverConfiguration.getOrDefault(OPERATOR_PASSWORD_KEY, "");
     }
 
     public String getServerAddress() {
@@ -78,5 +83,9 @@ public class IRCConfiguration extends ConfigurationEntry {
 
     public String getOperatorNick() {
         return operatorNick;
+    }
+
+    public String getOperatorPassword() {
+        return operatorPassword;
     }
 }

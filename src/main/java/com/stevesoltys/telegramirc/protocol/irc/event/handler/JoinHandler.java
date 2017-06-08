@@ -1,8 +1,10 @@
 package com.stevesoltys.telegramirc.protocol.irc.event.handler;
 
+import com.stevesoltys.telegramirc.protocol.irc.event.OperatorJoinEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserJoinEvent;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
+import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.events.JoinEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -15,17 +17,19 @@ import java.util.Optional;
  * @author Steve Soltys
  */
 @Component
-public class UserJoinHandler {
+public class JoinHandler {
+
+    private static final String OPERATOR_MODE = "+o";
 
     private final TelegramUserRepository userRepository;
 
     @Autowired
-    public UserJoinHandler(TelegramUserRepository userRepository) {
+    public JoinHandler(TelegramUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @EventListener
-    public void handle(UserJoinEvent userJoinEvent) {
+    public void handleUserJoin(UserJoinEvent userJoinEvent) {
         JoinEvent event = userJoinEvent.getEvent();
 
         String receiverNick = event.getBot().getNick();
@@ -44,5 +48,14 @@ public class UserJoinHandler {
         String channel = event.getChannel().getName();
         List<String> pendingChannelMessages = telegramUser.removePendingChannelMessages(channel);
         pendingChannelMessages.forEach(message -> telegramUser.getIrcBot().sendIRC().message(channel, message));
+    }
+
+    @EventListener
+    public void handleOperatorJoin(OperatorJoinEvent operatorJoinEvent) {
+        JoinEvent event = operatorJoinEvent.getEvent();
+        String channel = event.getChannel().getName();
+
+        PircBotX bot = event.getBot();
+        bot.sendIRC().mode(channel, OPERATOR_MODE + " " + bot.getNick());
     }
 }

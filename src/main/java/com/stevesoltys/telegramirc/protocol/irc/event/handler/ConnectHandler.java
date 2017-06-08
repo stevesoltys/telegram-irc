@@ -1,5 +1,7 @@
 package com.stevesoltys.telegramirc.protocol.irc.event.handler;
 
+import com.stevesoltys.telegramirc.configuration.IRCConfiguration;
+import com.stevesoltys.telegramirc.protocol.irc.event.OperatorConnectEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserConnectEvent;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
@@ -15,17 +17,22 @@ import java.util.Optional;
  * @author Steve Soltys
  */
 @Component
-public class UserConnectHandler {
+public class ConnectHandler {
+
+    private static final String RAW_OPERATOR_COMMAND = "OPER";
 
     private final TelegramUserRepository userRepository;
 
+    private final IRCConfiguration ircConfiguration;
+
     @Autowired
-    public UserConnectHandler(TelegramUserRepository userRepository) {
+    public ConnectHandler(TelegramUserRepository userRepository, IRCConfiguration ircConfiguration) {
         this.userRepository = userRepository;
+        this.ircConfiguration = ircConfiguration;
     }
 
     @EventListener
-    public void handle(UserConnectEvent userConnectEvent) {
+    public void handleUserConnection(UserConnectEvent userConnectEvent) {
         ConnectEvent event = userConnectEvent.getEvent();
 
         String receiverNick = event.getBot().getNick();
@@ -43,5 +50,17 @@ public class UserConnectHandler {
         telegramUser.removePendingPrivateMessages().forEach((username, messages) ->
                 messages.forEach(message -> ircBot.sendIRC().message(username, message))
         );
+    }
+
+    @EventListener
+    public void handleOperatorConnection(OperatorConnectEvent userConnectEvent) {
+        ConnectEvent event = userConnectEvent.getEvent();
+
+        String operatorPassword = ircConfiguration.getOperatorPassword();
+        if (!operatorPassword.isEmpty()) {
+            PircBotX bot = event.getBot();
+
+            bot.sendRaw().rawLine(RAW_OPERATOR_COMMAND + " " + bot.getNick() + " " + operatorPassword);
+        }
     }
 }

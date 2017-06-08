@@ -5,7 +5,8 @@
     "password": "irc_server_password",
     "ssl": true,
 
-    "operator_nick": "TelegramIRC"
+    "operator_nick": "TelegramIRC",
+    "operator_password": "operator_password"
   },
 
   "telegram": {
