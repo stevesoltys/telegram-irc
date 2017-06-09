@@ -1,5 +1,8 @@
-package com.stevesoltys.telegramirc.protocol.telegram;
+package com.stevesoltys.telegramirc.protocol.telegram.message;
 
+import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
+import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.photo.TelegramPhotoMessageDecoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.objects.Document;
 import org.telegram.telegrambots.api.objects.Message;
@@ -15,7 +18,14 @@ import java.util.List;
 @Component
 public class TelegramMessageDecoder {
 
-    public List<String> decode(Message telegramMessage) {
+    private final TelegramPhotoMessageDecoder photoMessageDecoder;
+
+    @Autowired
+    public TelegramMessageDecoder(TelegramPhotoMessageDecoder photoMessageDecoder) {
+        this.photoMessageDecoder = photoMessageDecoder;
+    }
+
+    public List<String> decode(TelegramBot telegramBot, Message telegramMessage) {
         List<String> messages = new LinkedList<>();
 
         if (telegramMessage.isReply()) {
@@ -44,7 +54,7 @@ public class TelegramMessageDecoder {
         }
 
         if (telegramMessage.getPhoto() != null) {
-            messages.add("(Photo)");
+            messages.addAll(photoMessageDecoder.decodePhotoMessage(telegramBot, telegramMessage));
         }
 
         if (telegramMessage.hasText()) {
