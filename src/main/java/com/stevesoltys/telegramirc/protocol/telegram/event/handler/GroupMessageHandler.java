@@ -1,10 +1,10 @@
 package com.stevesoltys.telegramirc.protocol.telegram.event.handler;
 
+import com.stevesoltys.telegramirc.configuration.telegram.TelegramChannelConfiguration;
 import com.stevesoltys.telegramirc.protocol.irc.IRCProtocol;
-import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageRepository;
-import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageDecoder;
-import com.stevesoltys.telegramirc.configuration.TelegramChannelConfiguration;
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramGroupMessageEvent;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageDecoder;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
 import org.pircbotx.PircBotX;

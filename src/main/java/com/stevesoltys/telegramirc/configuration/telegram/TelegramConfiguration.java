@@ -1,5 +1,8 @@
-package com.stevesoltys.telegramirc.configuration;
+package com.stevesoltys.telegramirc.configuration.telegram;
 
+import com.stevesoltys.telegramirc.configuration.ConfigurationEntry;
+import com.stevesoltys.telegramirc.configuration.ConfigurationEntryRepository;
+import com.stevesoltys.telegramirc.configuration.ConfigurationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

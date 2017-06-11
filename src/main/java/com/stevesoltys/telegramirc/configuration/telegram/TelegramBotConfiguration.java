@@ -1,5 +1,6 @@
-package com.stevesoltys.telegramirc.configuration;
+package com.stevesoltys.telegramirc.configuration.telegram;
 
+import com.stevesoltys.telegramirc.configuration.ConfigurationException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;

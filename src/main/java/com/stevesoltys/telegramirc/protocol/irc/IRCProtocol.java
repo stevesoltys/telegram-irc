@@ -1,6 +1,6 @@
 package com.stevesoltys.telegramirc.protocol.irc;
 
-import com.stevesoltys.telegramirc.configuration.IRCConfiguration;
+import com.stevesoltys.telegramirc.configuration.irc.IRCConfiguration;
 import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannel;
 import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannelRepository;
 import org.pircbotx.Configuration;
