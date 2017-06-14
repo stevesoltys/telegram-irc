@@ -57,6 +57,10 @@ public class TelegramMessageDecoder {
             messages.addAll(photoMessageDecoder.decodePhotoMessage(telegramBot, telegramMessage));
         }
 
+        if(telegramMessage.getCaption() != null) {
+            messages.addAll(decodeMultiLineMessages(telegramMessage.getCaption()));
+        }
+
         if (telegramMessage.hasText()) {
             messages.addAll(decodeMultiLineMessages(telegramMessage.getText()));
         }
