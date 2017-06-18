@@ -18,6 +18,8 @@ import java.util.List;
 @Component
 public class TelegramMessageDecoder {
 
+    private static final int MAX_IRC_MESSAGE_LENGTH = 480;
+
     private final TelegramPhotoMessageDecoder photoMessageDecoder;
 
     @Autowired
@@ -26,18 +28,24 @@ public class TelegramMessageDecoder {
     }
 
     public List<String> decode(TelegramBot telegramBot, Message telegramMessage) {
+        return decode(telegramBot, telegramMessage, false);
+    }
+
+    private List<String> decode(TelegramBot telegramBot, Message telegramMessage, boolean quotedMessage) {
         List<String> messages = new LinkedList<>();
 
-        if (telegramMessage.isReply()) {
+        if (telegramMessage.isReply() && !quotedMessage) {
             Message replyToMessage = telegramMessage.getReplyToMessage();
 
-            if (replyToMessage.getFrom() != null && replyToMessage.hasText()) {
-                int replyToMessageLength = replyToMessage.getText().length();
+            if (replyToMessage.getFrom() != null) {
+                String quotedMessageUsername = replyToMessage.getFrom().getUserName();
 
-                String quotedText = replyToMessage.getText()
-                        .substring(0, replyToMessageLength > 100 ? 100 : replyToMessageLength);
+                decode(telegramBot, replyToMessage, true).forEach(text -> {
+                    String quotedText = text.substring(0,
+                            text.length() > MAX_IRC_MESSAGE_LENGTH ? MAX_IRC_MESSAGE_LENGTH : text.length());
 
-                messages.add("<" + replyToMessage.getFrom().getUserName() + "> " + quotedText);
+                    messages.add("<" + quotedMessageUsername + "> " + quotedText);
+                });
             }
         }
 
@@ -57,7 +65,7 @@ public class TelegramMessageDecoder {
             messages.addAll(photoMessageDecoder.decodePhotoMessage(telegramBot, telegramMessage));
         }
 
-        if(telegramMessage.getCaption() != null) {
+        if (telegramMessage.getCaption() != null) {
             messages.addAll(decodeMultiLineMessages(telegramMessage.getCaption()));
         }
 
