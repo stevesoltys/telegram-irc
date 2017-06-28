@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 public class TelegramChannelConfiguration {
 
-    private static final String CHANNELS_KEY = "channels";
+    private static final String CONFIGURATION_KEY = "channels";
 
     private final Map<String, String> channelEntries;
 
@@ -22,7 +22,7 @@ public class TelegramChannelConfiguration {
 
     @SuppressWarnings("unchecked")
     public void initialize(Map<String, Object> configuration) {
-        Map<String, Object> ircConfiguration = (Map<String, Object>) configuration.get(CHANNELS_KEY);
+        Map<String, Object> ircConfiguration = (Map<String, Object>) configuration.get(CONFIGURATION_KEY);
 
         if (ircConfiguration == null) {
             throw new ConfigurationException("Could not find 'channels' entry in 'telegram'.");

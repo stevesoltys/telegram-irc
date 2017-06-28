@@ -1,7 +1,7 @@
-package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.photo;
+package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.image;
 
+import com.stevesoltys.telegramirc.configuration.telegram.TelegramDecoderConfiguration;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
-import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.photo.imgur.ImgurUploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +17,36 @@ import java.util.*;
  * @author Steve Soltys
  */
 @Component
-public class TelegramPhotoMessageDecoder {
+public class TelegramImageMessageDecoder {
 
     private static final String TELEGRAM_BOT_FILE_ENDPOINT = "https://api.telegram.org/file/bot";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final ImgurUploader imgurUploader;
+    private final TelegramDecoderConfiguration telegramDecoderConfiguration;
+
+    private final ImageDecoderRepository imageDecoderRepository;
 
     @Autowired
-    public TelegramPhotoMessageDecoder(ImgurUploader imgurUploader) {
-        this.imgurUploader = imgurUploader;
+    public TelegramImageMessageDecoder(TelegramDecoderConfiguration telegramDecoderConfiguration,
+                                       ImageDecoderRepository imageDecoderRepository) {
+        this.telegramDecoderConfiguration = telegramDecoderConfiguration;
+        this.imageDecoderRepository = imageDecoderRepository;
     }
 
-    public List<String> decodePhotoMessage(TelegramBot telegramBot, Message message) {
+    public List<String> decode(TelegramBot telegramBot, Message message) {
         Optional<String> filePathOptional = getFilePath(telegramBot, getPhoto(message));
 
         if (filePathOptional.isPresent()) {
             String telegramBotToken = telegramBot.getBotToken();
             String filePath = filePathOptional.get();
-
             String url = TELEGRAM_BOT_FILE_ENDPOINT + telegramBotToken + "/" + filePath;
-            Optional<String> result = imgurUploader.upload(url);
 
-            if (result.isPresent()) {
-                return Collections.singletonList(result.get());
+            String imageDecoderIdentifier = telegramDecoderConfiguration.getImageDecoder();
+            Optional<ImageDecoder> imageDecoderOptional = imageDecoderRepository.get(imageDecoderIdentifier);
+
+            if(imageDecoderOptional.isPresent()) {
+                return imageDecoderOptional.get().decode(url);
             }
         }
 

@@ -1,7 +1,7 @@
 package com.stevesoltys.telegramirc.protocol.telegram.message;
 
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
-import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.photo.TelegramPhotoMessageDecoder;
+import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.image.TelegramImageMessageDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.objects.Document;
@@ -20,11 +20,11 @@ public class TelegramMessageDecoder {
 
     private static final int MAX_IRC_MESSAGE_LENGTH = 480;
 
-    private final TelegramPhotoMessageDecoder photoMessageDecoder;
+    private final TelegramImageMessageDecoder telegramImageMessageDecoder;
 
     @Autowired
-    public TelegramMessageDecoder(TelegramPhotoMessageDecoder photoMessageDecoder) {
-        this.photoMessageDecoder = photoMessageDecoder;
+    public TelegramMessageDecoder(TelegramImageMessageDecoder telegramImageMessageDecoder) {
+        this.telegramImageMessageDecoder = telegramImageMessageDecoder;
     }
 
     public List<String> decode(TelegramBot telegramBot, Message telegramMessage) {
@@ -62,7 +62,7 @@ public class TelegramMessageDecoder {
         }
 
         if (telegramMessage.getPhoto() != null) {
-            messages.addAll(photoMessageDecoder.decodePhotoMessage(telegramBot, telegramMessage));
+            messages.addAll(telegramImageMessageDecoder.decode(telegramBot, telegramMessage));
         }
 
         if (telegramMessage.getCaption() != null) {

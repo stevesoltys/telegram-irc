@@ -14,7 +14,7 @@ import java.util.Set;
 @Component
 public class TelegramBotConfiguration {
 
-    private static final String BOTS_KEY = "bots";
+    private static final String CONFIGURATION_KEY = "bots";
 
     private static final String NICK_KEY = "nick";
 
@@ -30,7 +30,7 @@ public class TelegramBotConfiguration {
 
     @SuppressWarnings("unchecked")
     public void initialize(Map<String, Object> configuration) {
-        List<Map<String, Object>> botConfiguration = (List<Map<String, Object>>) configuration.get(BOTS_KEY);
+        List<Map<String, Object>> botConfiguration = (List<Map<String, Object>>) configuration.get(CONFIGURATION_KEY);
 
         if (botConfiguration == null) {
             throw new ConfigurationException("Could not find 'bots' entry in 'telegram'.");

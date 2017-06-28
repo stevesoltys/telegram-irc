@@ -1,4 +1,4 @@
-package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.photo.imgur;
+package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.image.impl.imgur;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

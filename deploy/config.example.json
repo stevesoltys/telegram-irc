@@ -20,6 +20,14 @@
 
     "channels": {
       "-1001071879676": "irc_channel_name"
+    },
+
+    "decoders": {
+      "imgur": {
+        "api_key": "ea6c0ef2987808e"
+      },
+
+      "image_decoder": "imgur"
     }
   }
 }

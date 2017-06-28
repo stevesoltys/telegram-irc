@@ -1,6 +1,8 @@
 package com.stevesoltys.telegramirc.configuration.telegram;
 
 import com.stevesoltys.telegramirc.configuration.ConfigurationException;
+import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.image.impl.DefaultImageDecoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -11,19 +13,36 @@ import java.util.Map;
 @Component
 public class TelegramDecoderConfiguration {
 
-    private static final String DECODERS_KEY = "decoders";
+    private static final String CONFIGURATION_KEY = "decoders";
 
-    public TelegramDecoderConfiguration() {
+    private static final String IMAGE_DECODER_KEY = "image_decoder";
+
+    private static final String DEFAULT_IMAGE_DECODER = DefaultImageDecoder.IDENTIFIER;
+
+    private final ImgurDecoderConfiguration imgurDecoderConfiguration;
+
+    private String imageDecoder;
+
+    @Autowired
+    public TelegramDecoderConfiguration(ImgurDecoderConfiguration imgurDecoderConfiguration) {
+        this.imgurDecoderConfiguration = imgurDecoderConfiguration;
+
+        imageDecoder = DEFAULT_IMAGE_DECODER;
     }
 
     @SuppressWarnings("unchecked")
     public void initialize(Map<String, Object> configuration) {
-        Map<String, Object> decoderConfiguration = (Map<String, Object>) configuration.get(DECODERS_KEY);
+        Map<String, Object> decoderConfiguration = (Map<String, Object>) configuration.get(CONFIGURATION_KEY);
 
         if (decoderConfiguration == null) {
-            throw new ConfigurationException("Could not find 'channels' entry in 'telegram'.");
+            throw new ConfigurationException("Could not find 'decoders' entry in 'telegram'.");
         }
 
+        imageDecoder = (String) decoderConfiguration.getOrDefault(IMAGE_DECODER_KEY, DEFAULT_IMAGE_DECODER);
+        imgurDecoderConfiguration.initialize(decoderConfiguration);
+    }
 
+    public String getImageDecoder() {
+        return imageDecoder;
     }
 }

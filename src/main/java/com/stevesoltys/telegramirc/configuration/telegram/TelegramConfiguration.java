@@ -14,26 +14,30 @@ import java.util.Map;
 @Component
 public class TelegramConfiguration extends ConfigurationEntry {
 
-    private static final String TELEGRAM_KEY = "telegram";
+    private static final String CONFIGURATION_KEY = "telegram";
 
     private final TelegramChannelConfiguration channelConfiguration;
 
     private final TelegramBotConfiguration botConfiguration;
 
+    private final TelegramDecoderConfiguration decoderConfiguration;
+
     @Autowired
     public TelegramConfiguration(ConfigurationEntryRepository configurationEntryRepository,
                                  TelegramChannelConfiguration channelConfiguration,
-                                 TelegramBotConfiguration botConfiguration) {
+                                 TelegramBotConfiguration botConfiguration,
+                                 TelegramDecoderConfiguration decoderConfiguration) {
         super(configurationEntryRepository);
 
         this.channelConfiguration = channelConfiguration;
         this.botConfiguration = botConfiguration;
+        this.decoderConfiguration = decoderConfiguration;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void initialize(Map<String, Object> configuration) {
-        Map<String, Object> ircConfiguration = (Map<String, Object>) configuration.get(TELEGRAM_KEY);
+        Map<String, Object> ircConfiguration = (Map<String, Object>) configuration.get(CONFIGURATION_KEY);
 
         if (ircConfiguration == null) {
             throw new ConfigurationException("Could not find 'telegram' entry.");
@@ -41,5 +45,6 @@ public class TelegramConfiguration extends ConfigurationEntry {
 
         channelConfiguration.initialize(ircConfiguration);
         botConfiguration.initialize(ircConfiguration);
+        decoderConfiguration.initialize(ircConfiguration);
     }
 }
