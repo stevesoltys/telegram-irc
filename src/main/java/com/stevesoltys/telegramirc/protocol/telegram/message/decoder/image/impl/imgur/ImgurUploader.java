@@ -1,8 +1,11 @@
 package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.image.impl.imgur;
 
 import com.stevesoltys.telegramirc.configuration.telegram.ImgurDecoderConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -17,6 +20,8 @@ public class ImgurUploader {
     private static final String UPLOAD_ENDPOINT = "https://api.imgur.com/3/image?image={image}";
 
     private static final String IMAGE_URI_VARIABLE = "image";
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ImgurDecoderConfiguration configuration;
 
@@ -34,13 +39,21 @@ public class ImgurUploader {
         headers.set("Authorization", "Client-ID " + configuration.getApiKey());
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<ImgurResponse> response = restTemplate.exchange(UPLOAD_ENDPOINT, HttpMethod.POST, entity,
-                ImgurResponse.class, Collections.singletonMap(IMAGE_URI_VARIABLE, imageUrl));
+        ResponseEntity<ImgurResponse> response;
+
+        try {
+            response = restTemplate.exchange(UPLOAD_ENDPOINT, HttpMethod.POST, entity, ImgurResponse.class,
+                    Collections.singletonMap(IMAGE_URI_VARIABLE, imageUrl));
+
+        } catch (HttpClientErrorException ex) {
+            logger.error("Error while uploading image to Imgur.", ex);
+            return Optional.empty();
+        }
 
         ImgurResponse imgurResponse = response.getBody();
         ImgurResponseData responseData = imgurResponse.getResponseData();
 
-        if(responseData == null) {
+        if (responseData == null) {
             return Optional.empty();
         }
 
