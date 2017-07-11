@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,9 +19,9 @@ import java.util.Optional;
 @Component
 public class ImgurUploader {
 
-    private static final String UPLOAD_ENDPOINT = "https://api.imgur.com/3/image?image={image}";
+    private static final String UPLOAD_ENDPOINT = "https://api.imgur.com/3/image";
 
-    private static final String IMAGE_URI_VARIABLE = "image";
+    private static final String IMAGE_PARAMETER_KEY = "image";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,12 +40,14 @@ public class ImgurUploader {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", "Client-ID " + configuration.getApiKey());
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add(IMAGE_PARAMETER_KEY, imageUrl);
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
         ResponseEntity<ImgurResponse> response;
 
         try {
-            response = restTemplate.exchange(UPLOAD_ENDPOINT, HttpMethod.POST, entity, ImgurResponse.class,
-                    Collections.singletonMap(IMAGE_URI_VARIABLE, imageUrl));
+            response = restTemplate.exchange(UPLOAD_ENDPOINT, HttpMethod.POST, entity, ImgurResponse.class);
 
         } catch (HttpClientErrorException ex) {
             logger.error("Error while uploading image to Imgur.", ex);
