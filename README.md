@@ -28,7 +28,7 @@ For a more detailed installation guide, see [this page](https://github.com/steve
 ## Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/stevesoltys/telegram-irc. This project is 
 intended tobe a safe, welcoming space for collaboration, and contributors are expected to adhere to the
-[Contributor Covenant](http://contributor-covenant.org) code of conduct.
+[code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 This application is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
