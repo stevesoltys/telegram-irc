@@ -17,11 +17,17 @@ public class TelegramDecoderConfiguration {
 
     private static final String IMAGE_DECODER_KEY = "image_decoder";
 
+    private static final String STICKER_DECODER_KEY = "sticker_decoder";
+
     private static final String DEFAULT_IMAGE_DECODER = DefaultImageDecoder.IDENTIFIER;
+
+    private static final String DEFAULT_STICKER_DECODER = DefaultImageDecoder.IDENTIFIER;
 
     private final ImgurDecoderConfiguration imgurDecoderConfiguration;
 
     private String imageDecoder;
+
+    private String stickerDecoder;
 
     @Autowired
     public TelegramDecoderConfiguration(ImgurDecoderConfiguration imgurDecoderConfiguration) {
@@ -39,10 +45,16 @@ public class TelegramDecoderConfiguration {
         }
 
         imageDecoder = (String) decoderConfiguration.getOrDefault(IMAGE_DECODER_KEY, DEFAULT_IMAGE_DECODER);
+        stickerDecoder = (String) decoderConfiguration.getOrDefault(STICKER_DECODER_KEY, DEFAULT_STICKER_DECODER);
+
         imgurDecoderConfiguration.initialize(decoderConfiguration);
     }
 
     public String getImageDecoder() {
         return imageDecoder;
+    }
+
+    public String getStickerDecoder() {
+        return stickerDecoder;
     }
 }
