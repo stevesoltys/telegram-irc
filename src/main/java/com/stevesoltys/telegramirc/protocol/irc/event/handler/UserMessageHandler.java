@@ -7,6 +7,7 @@ import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
+import org.pircbotx.User;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Steve Soltys
@@ -75,9 +78,9 @@ public class UserMessageHandler {
         TelegramUser telegramUser = telegramUserOptional.get();
         String telegramId = telegramUser.getTelegramIdentifier();
         String message = event.getMessage();
+        Set<User> users = Collections.singleton(event.getUser());
 
-        SendMessage telegramMessage = action ? messageEncoder.encodeActionMessage(telegramId, message) :
-                messageEncoder.encodeMessage(telegramId, message);
+        SendMessage telegramMessage = messageEncoder.encodeMessage(telegramId, message, users, action);
 
         try {
             TelegramBot telegramBot = telegramBotOptional.get();
