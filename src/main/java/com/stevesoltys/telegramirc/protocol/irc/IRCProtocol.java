@@ -6,6 +6,7 @@ import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannelRepo
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
+import org.pircbotx.hooks.managers.ThreadedListenerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class IRCProtocol {
                 .setName(username)
                 .setLogin(username)
                 .setRealName(username)
+                .setListenerManager(new ThreadedListenerManager(Executors.newSingleThreadExecutor()))
                 .addListener(operator ? operatorBotListener : userBotListener)
                 .setAutoNickChange(true)
                 .setAutoReconnect(true)
