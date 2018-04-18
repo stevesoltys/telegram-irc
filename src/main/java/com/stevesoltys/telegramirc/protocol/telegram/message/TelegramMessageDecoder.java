@@ -1,12 +1,9 @@
 package com.stevesoltys.telegramirc.protocol.telegram.message;
 
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
-import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.image.TelegramImageMessageDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.api.objects.Document;
 import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.Sticker;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -20,11 +17,19 @@ public class TelegramMessageDecoder {
 
     private static final int MAX_IRC_MESSAGE_LENGTH = 480;
 
-    private final TelegramImageMessageDecoder telegramImageMessageDecoder;
+    private final TelegramImageMessageDecoder imageMessageDecoder;
+
+    private final TelegramStickerMessageDecoder stickerMessageDecoder;
+
+    private final TelegramDocumentMessageDecoder documentMessageDecoder;
 
     @Autowired
-    public TelegramMessageDecoder(TelegramImageMessageDecoder telegramImageMessageDecoder) {
-        this.telegramImageMessageDecoder = telegramImageMessageDecoder;
+    public TelegramMessageDecoder(TelegramImageMessageDecoder imageMessageDecoder,
+                                  TelegramStickerMessageDecoder stickerMessageDecoder,
+                                  TelegramDocumentMessageDecoder documentMessageDecoder) {
+        this.imageMessageDecoder = imageMessageDecoder;
+        this.stickerMessageDecoder = stickerMessageDecoder;
+        this.documentMessageDecoder = documentMessageDecoder;
     }
 
     public List<String> decode(TelegramBot telegramBot, Message telegramMessage) {
@@ -50,19 +55,15 @@ public class TelegramMessageDecoder {
         }
 
         if (telegramMessage.hasDocument()) {
-            Document document = telegramMessage.getDocument();
-
-            messages.add("(" + document.getMimeType() + ")");
+            messages.addAll(documentMessageDecoder.decode(telegramBot, telegramMessage));
         }
 
         if (telegramMessage.getSticker() != null) {
-            Sticker sticker = telegramMessage.getSticker();
-
-            messages.add("(Sticker " + sticker.getEmoji() + ")");
+            messages.addAll(stickerMessageDecoder.decode(telegramBot, telegramMessage));
         }
 
         if (telegramMessage.getPhoto() != null) {
-            messages.addAll(telegramImageMessageDecoder.decode(telegramBot, telegramMessage));
+            messages.addAll(imageMessageDecoder.decode(telegramBot, telegramMessage));
         }
 
         if (telegramMessage.getCaption() != null) {

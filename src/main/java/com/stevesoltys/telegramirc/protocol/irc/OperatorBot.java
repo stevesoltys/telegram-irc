@@ -31,8 +31,8 @@ public class OperatorBot extends ListenerAdapter {
 
     @Override
     public void onConnect(ConnectEvent event) throws Exception {
-        eventPublisher.publishEvent(new OperatorConnectEvent(event));
         telegramProtocol.initialize();
+        eventPublisher.publishEvent(new OperatorConnectEvent(event));
     }
 
     @Override

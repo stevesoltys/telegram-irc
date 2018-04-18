@@ -26,6 +26,8 @@ repositories {
 dependencies {
     compile group: 'com.google.code.gson', name: 'gson'
     compile group: 'org.pircbotx', name: 'pircbotx', version: '2.1'
+    compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.4.0'
+    compile group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.4.0'
 
     compile('com.github.rubenlagus:TelegramBots:v2.3.5') {
         exclude module: 'jersey-grizzly2-servlet'
