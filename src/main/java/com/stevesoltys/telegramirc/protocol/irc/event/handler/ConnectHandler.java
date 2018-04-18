@@ -1,6 +1,6 @@
 package com.stevesoltys.telegramirc.protocol.irc.event.handler;
 
-import com.stevesoltys.telegramirc.configuration.IRCConfiguration;
+import com.stevesoltys.telegramirc.configuration.irc.IRCConfiguration;
 import com.stevesoltys.telegramirc.protocol.irc.event.OperatorConnectEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.UserConnectEvent;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;

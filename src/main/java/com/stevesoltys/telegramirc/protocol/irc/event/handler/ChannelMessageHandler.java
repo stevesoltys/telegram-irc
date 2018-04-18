@@ -3,10 +3,11 @@ package com.stevesoltys.telegramirc.protocol.irc.event.handler;
 import com.stevesoltys.telegramirc.protocol.irc.IRCMessageEncoder;
 import com.stevesoltys.telegramirc.protocol.irc.event.ActionMessageEvent;
 import com.stevesoltys.telegramirc.protocol.irc.event.ChannelMessageEvent;
-import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannel;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
-import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannelRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
+import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannel;
+import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannelRepository;
+import org.pircbotx.Channel;
 import org.pircbotx.hooks.events.ActionEvent;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.slf4j.Logger;
@@ -53,12 +54,8 @@ public class ChannelMessageHandler {
 
         String senderNick = event.getUser().getNick();
 
-        telegramBotRepository.findBot(senderNick).ifPresent(telegramBot -> {
-            String channelIdentifier = event.getChannel().getName();
-            String message = event.getMessage();
-
-            sendChannelMessage(channelIdentifier, telegramBot, message, true);
-        });
+        telegramBotRepository.findBot(senderNick).ifPresent(telegramBot ->
+                sendChannelMessage(telegramBot, event.getChannel(), event.getMessage(), true));
     }
 
     @EventListener
@@ -71,21 +68,18 @@ public class ChannelMessageHandler {
 
         String senderNick = event.getUser().getNick();
 
-        telegramBotRepository.findBot(senderNick).ifPresent(telegramBot -> {
-            String channelIdentifier = event.getChannel().getName();
-            String message = event.getMessage();
-
-            sendChannelMessage(channelIdentifier, telegramBot, message, false);
-        });
+        telegramBotRepository.findBot(senderNick).ifPresent(telegramBot ->
+                sendChannelMessage(telegramBot, event.getChannel(), event.getMessage(), false));
     }
 
-    private void sendChannelMessage(String channelIdentifier, TelegramBot telegramBot, String message, boolean action) {
+    private void sendChannelMessage(TelegramBot telegramBot, Channel channel, String message,
+                                    boolean action) {
+        String channelIdentifier = channel.getName();
         Optional<TelegramChannel> channelOptional = channelRepository.findByIrcIdentifier(channelIdentifier);
 
         if (channelOptional.isPresent()) {
             String telegramId = channelOptional.get().getTelegramIdentifier();
-            SendMessage telegramMessage = action ? messageEncoder.encodeActionMessage(telegramId, message) :
-                    messageEncoder.encodeMessage(telegramId, message);
+            SendMessage telegramMessage = messageEncoder.encodeMessage(telegramId, message, channel.getUsers(), action);
 
             try {
                 telegramBot.sendMessage(telegramMessage);

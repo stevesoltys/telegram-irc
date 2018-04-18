@@ -1,11 +1,12 @@
 package com.stevesoltys.telegramirc.protocol.irc;
 
-import com.stevesoltys.telegramirc.configuration.IRCConfiguration;
+import com.stevesoltys.telegramirc.configuration.irc.IRCConfiguration;
 import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannel;
 import com.stevesoltys.telegramirc.protocol.telegram.channel.TelegramChannelRepository;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
+import org.pircbotx.hooks.managers.ThreadedListenerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +64,14 @@ public class IRCProtocol {
                 .setName(username)
                 .setLogin(username)
                 .setRealName(username)
+                .setListenerManager(new ThreadedListenerManager(Executors.newSingleThreadExecutor()))
                 .addListener(operator ? operatorBotListener : userBotListener)
                 .setAutoNickChange(true)
                 .setAutoReconnect(true)
-                .addServer(serverConfiguration.getServerAddress(), serverConfiguration.getServerPort())
-                .setServerPassword(serverConfiguration.getServerPassword());
+                .addServer(serverConfiguration.getAddress(), serverConfiguration.getPort())
+                .setServerPassword(serverConfiguration.getPassword());
 
-        if (serverConfiguration.getSslFlag()) {
+        if (serverConfiguration.isSsl()) {
             configurationBuilder.setSocketFactory(SSLSocketFactory.getDefault());
         }
 

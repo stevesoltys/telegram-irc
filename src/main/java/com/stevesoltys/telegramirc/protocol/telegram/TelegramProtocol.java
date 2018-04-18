@@ -1,8 +1,8 @@
 package com.stevesoltys.telegramirc.protocol.telegram;
 
+import com.stevesoltys.telegramirc.configuration.telegram.TelegramBotConfiguration;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
-import com.stevesoltys.telegramirc.configuration.TelegramBotConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class TelegramProtocol {
 
     public void initialize() throws TelegramApiException {
 
-        botConfiguration.getBotEntries().forEach(entry -> {
+        botConfiguration.getBots().forEach(entry -> {
             TelegramBot telegramBot = new TelegramBot(eventPublisher, entry.getUsername(), entry.getToken());
 
             botRepository.register(entry.getNick(), telegramBot);

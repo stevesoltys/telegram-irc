@@ -1,7 +1,7 @@
 package com.stevesoltys.telegramirc.protocol.telegram.event.handler;
 
-import com.stevesoltys.telegramirc.protocol.telegram.TelegramMessageDecoder;
-import com.stevesoltys.telegramirc.protocol.telegram.TelegramMessageRepository;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageDecoder;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramPrivateMessageEvent;
@@ -57,7 +57,7 @@ public class PrivateMessageHandler {
 
             TelegramUser user = userRepository.findOrRegister(telegramIdentifier, senderIrcIdentifier);
 
-            telegramMessageDecoder.decode(telegramMessage).forEach(message ->
+            telegramMessageDecoder.decode(event.getTelegramBot(), telegramMessage).forEach(message ->
                     user.sendPrivateMessage(recipientIrcIdentifier, message));
         });
 

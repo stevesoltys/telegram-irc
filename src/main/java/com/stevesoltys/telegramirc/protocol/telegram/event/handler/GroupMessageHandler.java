@@ -1,10 +1,10 @@
 package com.stevesoltys.telegramirc.protocol.telegram.event.handler;
 
+import com.stevesoltys.telegramirc.configuration.telegram.TelegramChannelConfiguration;
 import com.stevesoltys.telegramirc.protocol.irc.IRCProtocol;
-import com.stevesoltys.telegramirc.protocol.telegram.TelegramMessageRepository;
-import com.stevesoltys.telegramirc.protocol.telegram.TelegramMessageDecoder;
-import com.stevesoltys.telegramirc.configuration.TelegramChannelConfiguration;
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramGroupMessageEvent;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageDecoder;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
 import org.pircbotx.PircBotX;
@@ -61,7 +61,7 @@ public class GroupMessageHandler {
         String ircIdentifier = telegramMessage.getFrom().getUserName();
         TelegramUser user = getUser(telegramIdentifier, ircIdentifier, ircChannelIdentifier);
 
-        messageDecoder.decode(telegramMessage).forEach(message ->
+        messageDecoder.decode(event.getTelegramBot(), telegramMessage).forEach(message ->
                 user.sendChannelMessage(ircChannelIdentifier, message));
     }
 
