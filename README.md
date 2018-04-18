@@ -1,4 +1,6 @@
 # telegram-irc
+[![Build Status](https://travis-ci.org/stevesoltys/telegram-irc.svg?branch=master)](https://travis-ci.org/stevesoltys/telegram-irc)
+
 A bridge between [Telegram](https://telegram.org/) and [IRC](https://en.wikipedia.org/wiki/Internet_Relay_Chat).
 
 ## Features
