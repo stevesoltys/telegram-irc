@@ -7,7 +7,7 @@ Type=simple
 User=telegramirc
 Group=telegramirc
 WorkingDirectory=/etc/telegram-irc
-ExecStart=/usr/bin/java -jar /usr/share/java/telegram-irc.jar config.json
+ExecStart=/usr/bin/java -jar /usr/share/java/telegram-irc.jar --spring.config.location=/etc/telegram-irc/config.yml
 Restart=on-failure
 
 [Install]

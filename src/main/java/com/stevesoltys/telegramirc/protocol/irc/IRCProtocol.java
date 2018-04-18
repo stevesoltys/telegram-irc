@@ -68,10 +68,10 @@ public class IRCProtocol {
                 .addListener(operator ? operatorBotListener : userBotListener)
                 .setAutoNickChange(true)
                 .setAutoReconnect(true)
-                .addServer(serverConfiguration.getServerAddress(), serverConfiguration.getServerPort())
-                .setServerPassword(serverConfiguration.getServerPassword());
+                .addServer(serverConfiguration.getAddress(), serverConfiguration.getPort())
+                .setServerPassword(serverConfiguration.getPassword());
 
-        if (serverConfiguration.getSslFlag()) {
+        if (serverConfiguration.isSsl()) {
             configurationBuilder.setSocketFactory(SSLSocketFactory.getDefault());
         }
 

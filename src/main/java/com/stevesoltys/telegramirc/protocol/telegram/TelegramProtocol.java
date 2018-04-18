@@ -37,7 +37,7 @@ public class TelegramProtocol {
 
     public void initialize() throws TelegramApiException {
 
-        botConfiguration.getBotEntries().forEach(entry -> {
+        botConfiguration.getBots().forEach(entry -> {
             TelegramBot telegramBot = new TelegramBot(eventPublisher, entry.getUsername(), entry.getToken());
 
             botRepository.register(entry.getNick(), telegramBot);
