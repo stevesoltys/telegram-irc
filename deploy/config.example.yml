@@ -17,8 +17,6 @@ telegram:
   channels:
     "-1001071879676": irc_channel_name
 
-  image-decoder: imgur
-
-  decoders:
-    imgur:
-      api_key: ea6c0ef2987808e
+  image-decoder: mixtape
+  sticker-decoder: mixtape
+  document-decoder: mixtape
