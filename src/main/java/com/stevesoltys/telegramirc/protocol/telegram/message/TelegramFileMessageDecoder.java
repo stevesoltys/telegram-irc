@@ -8,9 +8,7 @@ import org.telegram.telegrambots.api.methods.GetFile;
 import org.telegram.telegrambots.api.objects.File;
 import org.telegram.telegrambots.api.objects.Message;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Steve Soltys
@@ -21,18 +19,28 @@ public abstract class TelegramFileMessageDecoder {
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
+    private final Map<String, String> fileCache = new HashMap<>();
+
     List<String> decode(TelegramBot telegramBot, FileDecoder fileDecoder, String fileId) {
         Optional<File> fileOptional = getFile(telegramBot, fileId);
 
         if(fileOptional.isPresent()) {
             File file = fileOptional.get();
+
+            if (fileCache.containsKey(file.getFileId())) {
+                return Collections.singletonList(fileCache.get(file.getFileId()));
+            }
+
             String url = getFileUrl(telegramBot, file);
 
             if (file.getFileSize() < fileDecoder.maxFileSize()) {
                 Optional<String> resultUrlOptional = fileDecoder.decode(url);
 
                 if (resultUrlOptional.isPresent()) {
-                    return Collections.singletonList(resultUrlOptional.get());
+                    String resultUrl = resultUrlOptional.get();
+
+                    fileCache.put(file.getFileId(), resultUrl);
+                    return Collections.singletonList(resultUrl);
                 }
             }
         }
