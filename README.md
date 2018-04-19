@@ -8,7 +8,7 @@ A bridge between [Telegram](https://telegram.org/) and [IRC](https://en.wikipedi
 * Mapping of Telegram users to IRC bots, which includes private messaging.
 * Multi-user support. This means multiple IRC users can be mapped and relayed to their own Telegram bots.
 * Quoted messages when a user replies to another user's message.
-* Images are relayed via automatic uploads to [Imgur](https://imgur.com).
+* Automatic uploading of images, videos, stickers, and other files to https://mixtape.moe by default.
 
 ## Requirements
 * JDK 1.8

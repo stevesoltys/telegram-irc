@@ -1,3 +1,10 @@
+## [0.2.1] - 2018-04-17
+### Added
+- Support for automatic uploads of images, videos, stickers, and other files to https://mixtape.moe.
+
+### Removed
+- Imgur upload support, in favor of supporting all kinds of media.
+
 ## [0.2.0] - 2018-04-17
 ### Added
 - Example systemd unit.
