@@ -33,5 +33,6 @@ dependencies {
         exclude module: 'jersey-grizzly2-servlet'
     }
 
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
 }

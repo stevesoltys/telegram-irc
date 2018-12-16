@@ -1,5 +1,8 @@
 package com.stevesoltys.telegramirc.protocol.telegram.message;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.FileDecoder;
 import org.apache.log4j.Logger;
@@ -9,6 +12,8 @@ import org.telegram.telegrambots.api.objects.File;
 import org.telegram.telegrambots.api.objects.Message;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Steve Soltys
@@ -19,30 +24,41 @@ public abstract class TelegramFileMessageDecoder {
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
-    private final Map<String, String> fileCache = new HashMap<>();
+    private final Map<FileDecoder, LoadingCache<String, String>> fileCache = new HashMap<>();
 
     List<String> decode(TelegramBot telegramBot, FileDecoder fileDecoder, String fileId) {
-        Optional<File> fileOptional = getFile(telegramBot, fileId);
 
-        if(fileOptional.isPresent()) {
-            File file = fileOptional.get();
+        LoadingCache<String, String> loadingCache = fileCache.computeIfAbsent(fileDecoder, decoder ->
+                CacheBuilder.newBuilder()
+                        .maximumSize(10000)
+                        .expireAfterWrite(1, TimeUnit.DAYS)
+                        .build(new CacheLoader<String, String>() {
 
-            if (fileCache.containsKey(file.getFileId())) {
-                return Collections.singletonList(fileCache.get(file.getFileId()));
+                            public String load(String fileId) {
+                                Optional<File> fileOptional = getFile(telegramBot, fileId);
+
+                                if(fileOptional.isPresent()){
+                                    File file = fileOptional.get();
+                                    String url = getFileUrl(telegramBot, file);
+
+                                    if (file.getFileSize() < fileDecoder.maxFileSize()) {
+                                        return fileDecoder.decode(url).orElse(null);
+                                    }
+                                }
+
+                                return null;
+                            }
+                        }));
+
+        try {
+            String result = loadingCache.get(fileId);
+
+            if (result != null) {
+                return Collections.singletonList(result);
             }
 
-            String url = getFileUrl(telegramBot, file);
-
-            if (file.getFileSize() < fileDecoder.maxFileSize()) {
-                Optional<String> resultUrlOptional = fileDecoder.decode(url);
-
-                if (resultUrlOptional.isPresent()) {
-                    String resultUrl = resultUrlOptional.get();
-
-                    fileCache.put(file.getFileId(), resultUrl);
-                    return Collections.singletonList(resultUrl);
-                }
-            }
+        } catch (ExecutionException e) {
+            logger.error(e);
         }
 
         return Collections.emptyList();
