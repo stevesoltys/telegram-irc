@@ -1,16 +1,16 @@
 package com.stevesoltys.telegramirc.protocol.telegram.event.handler;
 
-import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageDecoder;
-import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramPrivateMessageEvent;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageDecoder;
+import com.stevesoltys.telegramirc.protocol.telegram.message.TelegramMessageRepository;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUser;
 import com.stevesoltys.telegramirc.protocol.telegram.user.TelegramUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Optional;
 

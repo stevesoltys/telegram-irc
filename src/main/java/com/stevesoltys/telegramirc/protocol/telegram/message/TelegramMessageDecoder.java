@@ -3,7 +3,7 @@ package com.stevesoltys.telegramirc.protocol.telegram.message;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Arrays;
 import java.util.LinkedList;

@@ -1,7 +1,7 @@
 package com.stevesoltys.telegramirc.protocol.telegram.message;
 
 import org.springframework.stereotype.Repository;
-import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.*;
 

@@ -19,20 +19,21 @@ apply plugin: 'spring-boot'
 
 repositories {
     mavenCentral()
-
-    maven { url "https://jitpack.io" }
 }
 
 dependencies {
     compile group: 'com.google.code.gson', name: 'gson'
     compile group: 'org.pircbotx', name: 'pircbotx', version: '2.1'
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.4.0'
-    compile group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.4.0'
+    compile group: 'com.squareup.retrofit2', name: 'converter-scalars', version: '2.4.0'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
 
-    compile('com.github.rubenlagus:TelegramBots:v2.3.5') {
-        exclude module: 'jersey-grizzly2-servlet'
-    }
+    compile 'org.telegram:telegrambots:4.1'
 
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
+}
+
+test {
+    useJUnitPlatform()
 }

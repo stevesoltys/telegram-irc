@@ -2,7 +2,7 @@ package com.stevesoltys.telegramirc.protocol.irc;
 
 import org.pircbotx.User;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.Arrays;
 import java.util.List;

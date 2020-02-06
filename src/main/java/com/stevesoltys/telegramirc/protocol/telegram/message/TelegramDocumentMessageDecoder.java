@@ -6,8 +6,8 @@ import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.FileDecoder
 import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.FileDecoderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.api.objects.Document;
-import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Document;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Collections;
 import java.util.List;
