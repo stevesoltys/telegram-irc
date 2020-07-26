@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.TelegramApiException;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -84,7 +84,7 @@ public class UserMessageHandler {
 
         try {
             TelegramBot telegramBot = telegramBotOptional.get();
-            telegramBot.sendMessage(telegramMessage);
+            telegramBot.execute(telegramMessage);
 
         } catch (TelegramApiException e) {
             logger.error("Error while sending Telegram message: {}", e.toString());

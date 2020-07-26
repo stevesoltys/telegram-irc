@@ -4,9 +4,9 @@ import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramGroupMessageE
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramMessageEvent;
 import com.stevesoltys.telegramirc.protocol.telegram.event.TelegramPrivateMessageEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.telegram.telegrambots.api.objects.Chat;
-import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 import java.util.Optional;
