@@ -1,25 +1,26 @@
 package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.uguu.x0;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.FileDecoder;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Optional;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 
@@ -33,7 +34,7 @@ public class UguuFileDecoder extends FileDecoder {
 
     private static final long MAX_FILE_SIZE = 100 * (1024 * 1024);
 
-    private static final String BASE_URL = "https://www.uguu.se";
+    private static final String BASE_URL = "https://uguu.se";
 
     private final Logger logger = LoggerFactory.getLogger(UguuFileDecoder.class);
 
@@ -63,18 +64,21 @@ public class UguuFileDecoder extends FileDecoder {
                 .build();
 
         RequestBody file = MultipartBody.create(MediaType.parse(MULTIPART_FORM_DATA), data);
-        MultipartBody.Part requestBody = MultipartBody.Part.createFormData("file", url.getFile(), file);
+        MultipartBody.Part requestBody =
+                MultipartBody.Part.createFormData("files[]", url.getFile(), file);
 
         UguuUploadService service = retrofit.create(UguuUploadService.class);
         Response<String> response = service.upload(requestBody).execute();
 
-        if (response.isSuccessful() && response.body() != null) {
-            Document document = Jsoup.parse(response.body());
-            Element element = document.getElementsByAttributeValueStarting("href", "https://a.uguu.se/").first();
+        try {
+            if (response.isSuccessful() && response.body() != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode objectNode = objectMapper.readTree(response.body());
 
-            if (element != null) {
-                return Optional.ofNullable(element.attr("href"));
+                return Optional.ofNullable(objectNode.get("files").get(0).get("url").asText());
             }
+        } catch (Exception ex) {
+            logger.error("Could not decode Uguu file", ex);
         }
 
         return Optional.empty();

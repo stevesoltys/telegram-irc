@@ -12,6 +12,6 @@ import retrofit2.http.Part;
 public interface UguuUploadService {
 
     @Multipart
-    @POST("/api.php?d=upload")
+    @POST("/upload.php")
     Call<String> upload(@Part MultipartBody.Part body);
 }
