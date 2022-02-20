@@ -28,7 +28,9 @@ dependencies {
     compile group: 'com.squareup.retrofit2', name: 'converter-scalars', version: '2.4.0'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
 
-    compile 'org.telegram:telegrambots:5.7.1'
+    compile('org.telegram:telegrambots:5.7.1') {
+        exclude group: 'com.google.guava'
+    }
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
