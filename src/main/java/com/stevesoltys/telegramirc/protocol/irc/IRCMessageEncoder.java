@@ -21,7 +21,10 @@ public class IRCMessageEncoder {
         message = action ? encodeActionMessage(message) : message;
         message = encodeUserHighlights(users, message);
 
-        return new SendMessage().setChatId(chatId).setText(message);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(message);
+        return sendMessage;
     }
 
     private String encodeActionMessage(String message) {
