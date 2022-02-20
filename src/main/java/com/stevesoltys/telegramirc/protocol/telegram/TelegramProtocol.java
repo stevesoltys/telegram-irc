@@ -6,8 +6,9 @@ import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.TelegramApiException;
-import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.Map;
 
@@ -27,12 +28,12 @@ public class TelegramProtocol {
 
     @Autowired
     public TelegramProtocol(ApplicationEventPublisher eventPublisher, TelegramBotConfiguration botConfiguration,
-                            TelegramBotRepository botRepository) {
+                            TelegramBotRepository botRepository) throws TelegramApiException {
         this.eventPublisher = eventPublisher;
         this.botConfiguration = botConfiguration;
         this.botRepository = botRepository;
 
-        telegramApi = new TelegramBotsApi();
+        telegramApi = new TelegramBotsApi(DefaultBotSession.class);
     }
 
     public void initialize() throws TelegramApiException {

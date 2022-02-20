@@ -1,4 +1,4 @@
-package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.mixtape;
+package com.stevesoltys.telegramirc.protocol.telegram.message.decoder.x0;
 
 import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.FileDecoder;
 import okhttp3.MediaType;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,15 +24,15 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_OCTET_STREAM_VA
  * @author Steve Soltys
  */
 @Component
-public class MixtapeFileDecoder extends FileDecoder {
+public class X0FileDecoder extends FileDecoder {
+
+    public static final String IDENTIFIER = "x0";
 
     private static final long MAX_FILE_SIZE = 100 * (1024 * 1024);
 
-    public static final String IDENTIFIER = "mixtape";
+    private static final String BASE_URL = "https://x0.at";
 
-    private static final String BASE_URL = "https://mixtape.moe";
-
-    private final Logger logger = LoggerFactory.getLogger(MixtapeFileDecoder.class);
+    private final Logger logger = LoggerFactory.getLogger(X0FileDecoder.class);
 
     @Override
     public Optional<String> decode(String fileUrl) {
@@ -43,13 +43,8 @@ public class MixtapeFileDecoder extends FileDecoder {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             IOUtils.copy(conn.getInputStream(), outputStream);
 
-            Optional<MixtapeResponse> responseOptional = upload(url, outputStream.toByteArray());
+            return upload(url, outputStream.toByteArray());
 
-            if (responseOptional.isPresent()) {
-                MixtapeResponse response = responseOptional.get();
-
-                return Optional.ofNullable(response.getFiles().get(0).getUrl());
-            }
         } catch (Exception ex) {
             logger.error("Could not upload file to " + BASE_URL, ex);
         }
@@ -57,17 +52,18 @@ public class MixtapeFileDecoder extends FileDecoder {
         return Optional.empty();
     }
 
-    private Optional<MixtapeResponse> upload(URL url, byte[] data) throws IOException {
+    private Optional<String> upload(URL url, byte[] data) throws IOException {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
 
         RequestBody file = MultipartBody.create(MediaType.parse(APPLICATION_OCTET_STREAM_VALUE), data);
-        MultipartBody.Part requestBody = MultipartBody.Part.createFormData("files[]", url.getFile(), file);
+        MultipartBody.Part requestBody = MultipartBody.Part.createFormData("file", url.getFile(), file);
 
-        MixtapeUploadService service = retrofit.create(MixtapeUploadService.class);
-        Response<MixtapeResponse> response = service.upload(requestBody).execute();
+        X0UploadService service = retrofit.create(X0UploadService.class);
+        Response<String> response = service.upload(requestBody).execute();
 
         if (response.isSuccessful()) {
             return Optional.ofNullable(response.body());

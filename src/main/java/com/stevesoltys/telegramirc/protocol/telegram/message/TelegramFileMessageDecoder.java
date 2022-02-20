@@ -6,10 +6,10 @@ import com.google.common.cache.LoadingCache;
 import com.stevesoltys.telegramirc.protocol.telegram.bot.TelegramBot;
 import com.stevesoltys.telegramirc.protocol.telegram.message.decoder.FileDecoder;
 import org.apache.log4j.Logger;
-import org.telegram.telegrambots.TelegramApiException;
-import org.telegram.telegrambots.api.methods.GetFile;
-import org.telegram.telegrambots.api.objects.File;
-import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.objects.File;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -69,7 +69,7 @@ public abstract class TelegramFileMessageDecoder {
         getFileMethod.setFileId(fileId);
 
         try {
-            return Optional.ofNullable(telegramBot.getFile(getFileMethod));
+            return Optional.ofNullable(telegramBot.execute(getFileMethod));
 
         } catch (TelegramApiException e) {
             logger.error("Error while downloading Telegram sticker image", e);
